@@ -50,11 +50,18 @@ esac
     echo eval snyk-${PREFIX} \$@
 } > snyk
 
+# check if we're already root (e.g. running in a container)
+if [ "$EUID" -ne 0 ]; then 
+   SUDO="" 
+else
+   SUDO="sudo"
+fi
+
 chmod +x snyk
-sudo mv snyk /usr/local/bin
+${SUDO} mv snyk /usr/local/bin
 
 wget -qO- ${URL} | grep "browser_download_url" | grep $PREFIX | cut -d '"' -f 4 | wget --progress=bar:force:noscroll -i -
 
 sha256sum -c snyk-${PREFIX}.sha256
 chmod +x snyk-${PREFIX}
-sudo mv snyk-${PREFIX} /usr/local/bin
+${SUDO} mv snyk-${PREFIX} /usr/local/bin
