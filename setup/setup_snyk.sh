@@ -57,11 +57,14 @@ else
    SUDO="sudo"
 fi
 
+echo EUID=${EUID}
+echo cgroup: $(cat /proc/1/cgroup)
+
 chmod +x snyk
-${SUDO} mv snyk /usr/local/bin
+mv snyk /usr/local/bin
 
 wget -qO- ${URL} | grep "browser_download_url" | grep $PREFIX | cut -d '"' -f 4 | wget --progress=bar:force:noscroll -i -
 
 sha256sum -c snyk-${PREFIX}.sha256
 chmod +x snyk-${PREFIX}
-${SUDO} mv snyk-${PREFIX} /usr/local/bin
+mv snyk-${PREFIX} /usr/local/bin
